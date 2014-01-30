@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |gem|
   gem.name          = 'fluent-plugin-mobile-carrier'
-  gem.version       = '0.0.2'
+  gem.version       = '0.0.3'
   gem.authors       = ['HARUYAMA Seigo']
   gem.email         = ['haruyama@unixuser.org']
   gem.description   = %q{judge mobile carrier by ip address.}
