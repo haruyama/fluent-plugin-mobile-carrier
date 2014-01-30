@@ -21,6 +21,29 @@ unknown_carrier unknown
 out_key_mobile_carrier mc
 ]
 
+  CONFIG_ERROR1 = %[
+type mobile_carrier
+remove_prefix test
+add_prefix merged
+key_name ip_address
+]
+
+  CONFIG_ERROR2 = %[
+type mobile_carrier
+remove_prefix test
+add_prefix merged
+key_name ip_address
+config_yaml test/data/not_found.yaml
+]
+
+  CONFIG_ERROR3 = %[
+type mobile_carrier
+remove_prefix test
+add_prefix merged
+key_name ip_address
+config_yaml test/data/wrong.yaml
+]
+
   def create_driver(conf = CONFIG1, tag = 'test')
     Fluent::Test::OutputTestDriver.new(Fluent::MobileCarrierOutput, tag).configure(conf)
   end
@@ -43,6 +66,18 @@ out_key_mobile_carrier mc
 
     assert_equal 'unknown', d.instance.unknown_carrier
     assert_equal 'mc',      d.instance.out_key_mobile_carrier
+
+    assert_raise_with_message(Fluent::ConfigError, "'config_yaml' parameter is required") do
+      d = create_driver CONFIG_ERROR1
+    end
+
+    assert_raise(Errno::ENOENT) do
+      d = create_driver CONFIG_ERROR2
+    end
+
+    assert_raise(RuntimeError) do
+      d = create_driver CONFIG_ERROR3
+    end
   end
 
   def test_tag_mangle

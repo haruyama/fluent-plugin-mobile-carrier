@@ -19,9 +19,9 @@ class Fluent::MobileCarrierOutput < Fluent::Output
 
   def configure(conf)
     super
-
-    raise 'config_yaml is not set!' unless (@config_yaml)
-    @config = prepare_config(YAML.load_file(@config_yaml))
+    config =  YAML.load_file(@config_yaml)
+    raise 'invalid yaml' unless (config.is_a? Hash)
+    @config = parse_config(config)
 
     if !@tag && !@remove_prefix && !@add_prefix
       fail Fluent::ConfigError, 'missing both of remove_prefix and add_prefix'
@@ -55,7 +55,7 @@ class Fluent::MobileCarrierOutput < Fluent::Output
     end
   end
 
-  def prepare_config(raw_config)
+  def parse_config(raw_config)
     config = {}
     raw_config.each { |carrier, ip_address_list|
       config[carrier] = ip_address_list.map { |ip_address|
