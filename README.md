@@ -1,4 +1,4 @@
-# fluent-plugin-mobile-carrier
+# fluent-plugin-mobile-carrier, a plugin for [Fluentd](http://fluentd.org)
 
 ## MobileCarrierOutput
 
