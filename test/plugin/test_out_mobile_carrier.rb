@@ -3,15 +3,15 @@ require 'helper'
 # MobileCarrierOutput test
 class Fluent::MobileCarrierOutputTest < Test::Unit::TestCase
   # through & merge
-  CONFIG1 = %[
+  CONFIG1 = %(
 type mobile_carrier
 remove_prefix test
 add_prefix merged
 config_yaml test/data/config1.yaml
 key_name ip_address
-]
+  )
 
-  CONFIG2 = %[
+  CONFIG2 = %(
 type mobile_carrier
 remove_prefix test
 add_prefix merged
@@ -19,30 +19,30 @@ config_yaml test/data/config1.yaml
 key_name ip
 unknown_carrier unknown
 out_key_mobile_carrier mc
-]
+  )
 
-  CONFIG_ERROR1 = %[
+  CONFIG_ERROR1 = %(
 type mobile_carrier
 remove_prefix test
 add_prefix merged
 key_name ip_address
-]
+  )
 
-  CONFIG_ERROR2 = %[
+  CONFIG_ERROR2 = %(
 type mobile_carrier
 remove_prefix test
 add_prefix merged
 key_name ip_address
 config_yaml test/data/not_found.yaml
-]
+  )
 
-  CONFIG_ERROR3 = %[
+  CONFIG_ERROR3 = %(
 type mobile_carrier
 remove_prefix test
 add_prefix merged
 key_name ip_address
 config_yaml test/data/wrong.yaml
-]
+  )
 
   def create_driver(conf = CONFIG1, tag = 'test')
     Fluent::Test::OutputTestDriver.new(Fluent::MobileCarrierOutput, tag).configure(conf)
@@ -129,5 +129,4 @@ config_yaml test/data/wrong.yaml
     assert_equal 5,         m['value']
     assert_equal 'UNKNOWN', m['mobile_carrier']
   end
-
 end

@@ -1,0 +1,23 @@
+LineLength:
+  Enabled: false
+
+MethodLength:
+  Enabled: true
+  CountComments: false
+  Max: 50
+
+ClassAndModuleChildren:
+  EnforcedStyle: compact
+  SupportedStyles:
+    - nested
+    - compact
+
+CyclomaticComplexity:
+  Max: 10
+
+ClassLength:
+  CountComments: false
+  Max: 150
+
+GlobalVars:
+  AllowedVariables: [$log]
