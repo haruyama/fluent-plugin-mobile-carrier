@@ -18,7 +18,7 @@ class Fluent::MobileCarrierOutput < Fluent::Output
   def configure(conf)
     super
     config =  YAML.load_file(@config_yaml)
-    raise 'invalid yaml' unless (config.is_a? Hash)
+    fail 'invalid yaml' unless config.is_a? Hash
     @config = parse_config(config)
 
     if !@tag && !@remove_prefix && !@add_prefix
@@ -55,20 +55,20 @@ class Fluent::MobileCarrierOutput < Fluent::Output
 
   def parse_config(raw_config)
     config = {}
-    raw_config.each { |carrier, ip_address_list|
-      config[carrier] = ip_address_list.map { |ip_address|
+    raw_config.each do |carrier, ip_address_list|
+      config[carrier] = ip_address_list.map do |ip_address|
         TubeAddress.new(ip_address)
-      }
-    }
+      end
+    end
     config
   end
 
   def judge_mobile_carrier(ip_address, config)
-    config.each { |carrier, ipaddr_list|
+    config.each do |carrier, ipaddr_list|
       if ipaddr_list.any? { |ipaddr| ipaddr.include? ip_address }
         return carrier
       end
-    }
+    end
     @unknown_carrier
   end
 
@@ -86,10 +86,10 @@ end
 
 # https://github.com/jordansissel/experiments/blob/master/ruby/ipaddr-is-slow/code.rb
 class TubeAddress
-  IPv4MASK = 0xFFFFFFFF # 255.255.255.255
+  IPV4MASK = 0xFFFFFFFF # 255.255.255.255
 
   def initialize(addr)
-    @address, cidr, _ = addr.split("/") + ["32"]
+    @address, cidr, _ = addr.split('/') + ['32']
 
     @address_int = self.class.ip_to_num(@address)
     @cidr = cidr.to_i
@@ -98,7 +98,7 @@ class TubeAddress
 
   def cidr_mask
     # Convert /24 to 0xffffff00, etc
-    @cidr_mask ||= IPv4MASK ^ ((1 << (32 - @cidr)) - 1)
+    @cidr_mask ||= IPV4MASK ^ ((1 << (32 - @cidr)) - 1)
   end
 
   def include?(addr)
@@ -107,11 +107,10 @@ class TubeAddress
   end
 
   def self.ip_to_num(addr)
-    return addr.split(".").reduce(0) { |s,c| s = (s << 8) + (c.to_i) }
+    addr.split('.').reduce(0) { |a, e| (a << 8) + (e.to_i) }
   end
 
   def to_s
-    return "#{@address}/#{@cidr}"
+    "#{@address}/#{@cidr}"
   end
 end
-
